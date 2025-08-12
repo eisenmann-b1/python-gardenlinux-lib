@@ -169,3 +169,6 @@ bandit-report.json
 
 # zot
 test-data/zot
+
+# ruff
+.ruff_cache/
