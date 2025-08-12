@@ -349,4 +349,4 @@ class Manifest(dict):
         metadata["platform"] = NewPlatform(self.arch, self.version)
 
         with open(manifest_file_path_name, "w") as fp:
-            fp.write(json.dumps(metadata))
+            json.dump(metadata, fp)

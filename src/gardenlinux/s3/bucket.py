@@ -130,7 +130,7 @@ class Bucket:
 
         if cache_file.exists() and (time() - cache_file.stat().st_mtime) < cache_ttl:
             with cache_file.open("r") as fp:
-                return json.loads(fp.read())
+                return json.load(fp)
 
         artifacts = [
             s3_object.key for s3_object in self._bucket.objects.filter(**kwargs).all()

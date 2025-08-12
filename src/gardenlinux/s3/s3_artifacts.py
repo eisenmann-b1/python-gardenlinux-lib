@@ -238,7 +238,7 @@ class S3Artifacts:
             )
 
         with TemporaryFile(mode="wb+") as fp:
-            fp.write(yaml.dump(metadata).encode("utf-8"))
+            yaml.dump(metadata, fp, encoding="utf-8")
             fp.seek(0)
 
             self._bucket.upload_fileobj(
