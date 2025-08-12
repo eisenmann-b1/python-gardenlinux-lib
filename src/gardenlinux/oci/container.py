@@ -238,7 +238,7 @@ class Container(Registry):
 
         for file_path_name in manifests_dir.iterdir():
             with open(file_path_name) as fp:
-                manifest = json.loads(fp.read())
+                manifest = json.load(fp)
 
             if manifest["annotations"]["cname"] in index.manifests_as_dict:
                 existing_manifest = index.manifests_as_dict[
