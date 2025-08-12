@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # for reference:
 #   https://json-schema.org/understanding-json-schema/reference/object
 

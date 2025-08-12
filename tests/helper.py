@@ -11,9 +11,7 @@ def spawn_background_process(cmd, stdout=None, stderr=None):
 def call_command(cmd):
     try:
         args = shlex.split(cmd)
-        result = subprocess.run(
-            args, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
+        result = subprocess.run(args, check=True, capture_output=True)
         output = result.stdout.decode("utf-8")
         return output
 

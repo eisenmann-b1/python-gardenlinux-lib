@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from gardenlinux.git import Git
 
 TEST_DATA_DIR = "test-data"

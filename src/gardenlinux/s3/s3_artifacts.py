@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 S3 GardenLinux artifacts
 """
@@ -12,7 +10,7 @@ from os import PathLike, stat
 from os.path import basename
 from pathlib import Path
 from tempfile import TemporaryFile
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlencode
 
 import yaml
@@ -21,7 +19,7 @@ from ..features.cname import CName
 from .bucket import Bucket
 
 
-class S3Artifacts(object):
+class S3Artifacts:
     """
     S3Artifacts support access to GardenLinux S3 resources.
 
@@ -37,9 +35,9 @@ class S3Artifacts(object):
     def __init__(
         self,
         bucket_name: str,
-        endpoint_url: Optional[str] = None,
-        s3_resource_config: Optional[dict[str, Any]] = None,
-        logger: Optional[logging.Logger] = None,
+        endpoint_url: str | None = None,
+        s3_resource_config: dict[str, Any] | None = None,
+        logger: logging.Logger | None = None,
     ):
         """
         Constructor __init__(S3Artifacts)

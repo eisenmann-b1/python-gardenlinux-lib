@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
 gl-features-parse main entrypoint
@@ -10,7 +9,7 @@ import logging
 import os
 from functools import reduce
 from os import path
-from typing import Any, List, Set
+from typing import Any
 
 from .cname import CName
 from .parser import Parser
@@ -81,9 +80,7 @@ def main() -> None:
             version = f"{version_data[0]}-{version_data[1]}"
         except RuntimeError as exc:
             logging.debug(
-                "Failed to parse version information for GL root '{0}': {1}".format(
-                    gardenlinux_root, exc
-                )
+                f"Failed to parse version information for GL root '{gardenlinux_root}': {exc}"
             )
 
             version = args.default_version
@@ -159,7 +156,7 @@ def main() -> None:
         print(f"{version}-{commit_id}")
 
 
-def get_cname_base(sorted_features: Set[str]):
+def get_cname_base(sorted_features: set[str]):
     """
     Get the base cname for the feature set given.
 
@@ -188,11 +185,11 @@ def get_version_and_commit_id_from_files(gardenlinux_root: str) -> tuple[str, st
     version = None
 
     if os.access(path.join(gardenlinux_root, "COMMIT"), os.R_OK):
-        with open(path.join(gardenlinux_root, "COMMIT"), "r") as fp:
+        with open(path.join(gardenlinux_root, "COMMIT")) as fp:
             commit_id = fp.read().strip()[:8]
 
     if os.access(path.join(gardenlinux_root, "VERSION"), os.R_OK):
-        with open(path.join(gardenlinux_root, "VERSION"), "r") as fp:
+        with open(path.join(gardenlinux_root, "VERSION")) as fp:
             version = fp.read().strip()
 
     if commit_id is None or version is None:
@@ -201,7 +198,7 @@ def get_version_and_commit_id_from_files(gardenlinux_root: str) -> tuple[str, st
     return (version, commit_id)
 
 
-def get_minimal_feature_set(graph: Any) -> Set[str]:
+def get_minimal_feature_set(graph: Any) -> set[str]:
     """
     Returns the minimal set of features described by the given graph.
 
@@ -237,7 +234,7 @@ def graph_as_mermaid_markup(flavor: str, graph: Any) -> str:
     return markup
 
 
-def sort_subset(input_set: Set[str], order_list: List[str]) -> List[str]:
+def sort_subset(input_set: set[str], order_list: list[str]) -> list[str]:
     """
     Returns items from `order_list` if given in `input_set`.
 

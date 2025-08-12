@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ARCHS = ["amd64", "arm64"]
 
 # GardenLinux "bare" feature

@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from collections.abc import Mapping
 from os import PathLike
 from pathlib import Path
-from typing import Optional
 
 from oras.defaults import annotation_title as ANNOTATION_TITLE
 from oras.oci import Layer as _Layer
@@ -29,7 +26,7 @@ class Layer(_Layer, Mapping):
     def __init__(
         self,
         blob_path: PathLike | str,
-        media_type: Optional[str] = None,
+        media_type: str | None = None,
         is_dir: bool = False,
     ):
         """
