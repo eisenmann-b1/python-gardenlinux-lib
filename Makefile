@@ -62,7 +62,7 @@ format: install-dev
 	$(POETRY) run black --extend-exclude test-data/gardenlinux .
 
 lint: install-dev
-	$(POETRY) run black --check --extend-exclude test-data/gardenlinux .
+	$(POETRY) run ruff check --extend-exclude test-data/gardenlinux .
 
 security: install-dev
 	@if [ "$(CI)" = "true" ]; then \
@@ -80,6 +80,7 @@ clean:
 	rm -rf *.egg-info/
 	rm -rf .eggs/
 	rm -rf .pytest_cache/
+	rm -rf .ruff_cache/
 	rm -rf .coverage
 	rm -rf htmlcov/
 	find . -type d -name __pycache__ -exec rm -rf {} +
