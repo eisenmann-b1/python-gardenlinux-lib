@@ -1,4 +1,4 @@
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from os import PathLike
 from pathlib import Path
 
@@ -39,17 +39,16 @@ class Layer(_Layer, Mapping):
         :since: 0.7.0
         """
 
-        if not isinstance(blob_path, PathLike):
-            blob_path = Path(blob_path)
+        blob_path = Path(blob_path)
 
-        _Layer.__init__(self, blob_path, media_type, is_dir)
+        _Layer.__init__(self, str(blob_path), media_type, is_dir)
 
         self._annotations = {
             ANNOTATION_TITLE: blob_path.name,
         }
 
     @property
-    def dict(self):
+    def dict(self) -> dict:
         """
         Return a dictionary representation of the layer
 
@@ -94,7 +93,7 @@ class Layer(_Layer, Mapping):
             f"'{self.__class__.__name__}' object is not subscriptable except for keys: {_SUPPORTED_MAPPING_KEYS}"
         )
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         """
         python.org: Return an iterator object.
 
@@ -104,7 +103,7 @@ class Layer(_Layer, Mapping):
 
         return iter(_SUPPORTED_MAPPING_KEYS)
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         python.org: Called to implement the built-in function len().
 
@@ -143,8 +142,7 @@ class Layer(_Layer, Mapping):
         :since:  0.7.0
         """
 
-        if not isinstance(file_name, PathLike):
-            file_name = Path(file_name)
+        file_name = Path(file_name)
 
         media_type = Layer.lookup_media_type_for_file_name(file_name)
 
@@ -155,7 +153,7 @@ class Layer(_Layer, Mapping):
         }
 
     @staticmethod
-    def lookup_media_type_for_file_name(file_name: str) -> str:
+    def lookup_media_type_for_file_name(file_name: PathLike | str) -> str:
         """
         Looks up the media type based on file name or extension.
 
@@ -165,8 +163,7 @@ class Layer(_Layer, Mapping):
         :since:  0.7.0
         """
 
-        if not isinstance(file_name, PathLike):
-            file_name = Path(file_name)
+        file_name = Path(file_name)
 
         for lookup_name in GL_MEDIA_TYPES:
             if file_name.match(f"*.{lookup_name}") or file_name.name == lookup_name:

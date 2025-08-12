@@ -267,7 +267,7 @@ def test_main_raises_no_arch_no_default(monkeypatch):
     monkeypatch.setattr(
         fema,
         "Parser",
-        lambda *a, **kw: types.SimpleNamesapce(filter=lambda *a, **k: None),
+        lambda *a, **kw: types.SimpleNamespace(filter=lambda *a, **k: None),
     )
     monkeypatch.setattr(fema, "CName", lambda *a, **kw: None)
 

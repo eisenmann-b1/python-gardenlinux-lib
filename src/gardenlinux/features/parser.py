@@ -116,7 +116,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> networkx.Graph:
         """
         Filters the features graph.
@@ -162,7 +162,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> dict:
         """
         Filters the features graph and returns it as a dict.
@@ -194,7 +194,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> list:
         """
         Filters the features graph and returns it as a list.
@@ -214,7 +214,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> str:
         """
         Filters the features graph and returns it as a string.
@@ -232,6 +232,7 @@ class Parser:
 
         return ",".join(features)
 
+    @staticmethod
     def _exclude_from_filter_set(graph, input_features, filter_set):
         """
         Removes the given `filter_set` out of `input_features`.

@@ -1,5 +1,7 @@
+from collections.abc import Buffer
 from dataclasses import dataclass
 from hashlib import md5, sha256
+from typing import BinaryIO, Protocol, Self
 
 import boto3
 import pytest
@@ -7,6 +9,17 @@ from moto import mock_aws
 
 BUCKET_NAME = "test-bucket"
 REGION = "us-east-1"
+
+
+class _Hash(Protocol):
+    digest_size: int
+    block_size: int
+    name: str
+
+    def update(self, data: Buffer) -> None: ...
+    def digest(self) -> bytes: ...
+    def hexdigest(self) -> str: ...
+    def copy(self) -> Self: ...
 
 
 @dataclass(frozen=True)
@@ -30,7 +43,7 @@ def make_cname(
 
 
 # Helpers to compute digests for fake files
-def dummy_digest(data: bytes, algo: str) -> str:
+def dummy_digest(data: BinaryIO, algo: str) -> _Hash:
     """
     Dummy for file_digest() to compute hashes for in-memory byte streams
     """
