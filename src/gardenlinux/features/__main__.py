@@ -46,14 +46,12 @@ def main() -> None:
     parser.add_argument("--default-version", dest="default_version")
     parser.add_argument("--version", dest="version")
 
-    parser.add_argument(
-        "--features", type=lambda arg: set([f for f in arg.split(",") if f])
-    )
+    parser.add_argument("--features", type=lambda arg: {f for f in arg.split(",") if f})
 
     parser.add_argument(
         "--ignore",
         dest="ignore",
-        type=lambda arg: set([f for f in arg.split(",") if f]),
+        type=lambda arg: {f for f in arg.split(",") if f},
         default=set(),
     )
 
@@ -218,7 +216,7 @@ def get_minimal_feature_set(graph: Any) -> set[str]:
     :since:  0.7.0
     """
 
-    return set([node for (node, degree) in graph.in_degree() if degree == 0])
+    return {node for (node, degree) in graph.in_degree() if degree == 0}
 
 
 def graph_as_mermaid_markup(flavor: str, graph: Any) -> str:

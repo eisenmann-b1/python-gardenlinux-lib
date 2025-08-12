@@ -8,6 +8,7 @@ extend-exclude = [
 select = [
 	"E4", "E7", "E9", "F", # ruff defaults
 	"B", # flake8-bugbear: find likely bugs and design problems
+	"C4", # flake8-comprehensions: better list/set/dict comprehensions
 	"I", # isort: organize imports
 	"UP", # pyupgrade: upgrade syntax for newer versions
 	"FURB", # refurb: refurbish and modernize code
