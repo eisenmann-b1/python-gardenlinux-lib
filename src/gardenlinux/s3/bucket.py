@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 S3 bucket
 """
@@ -9,14 +7,14 @@ import logging
 from os import PathLike
 from pathlib import Path
 from time import time
-from typing import Any, Optional
+from typing import Any
 
 import boto3
 
 from ..logger import LoggerSetup
 
 
-class Bucket(object):
+class Bucket:
     """
     S3 bucket class
 
@@ -32,9 +30,9 @@ class Bucket(object):
     def __init__(
         self,
         bucket_name: str,
-        endpoint_url: Optional[str] = None,
-        s3_resource_config: Optional[dict[str, Any]] = None,
-        logger: Optional[logging.Logger] = None,
+        endpoint_url: str | None = None,
+        s3_resource_config: dict[str, Any] | None = None,
+        logger: logging.Logger | None = None,
     ):
         """
         Constructor __init__(Bucket)

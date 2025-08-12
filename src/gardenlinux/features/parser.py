@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
 Features parser based on networkx.Digraph
 """
 
 import logging
 import os
+from collections.abc import Callable
 from glob import glob
-from typing import Callable, Optional
 
 import networkx
 import yaml
@@ -19,7 +17,7 @@ from ..constants import (
 from ..logger import LoggerSetup
 
 
-class Parser(object):
+class Parser:
     """
     Parser for GardenLinux features.
 
@@ -39,9 +37,9 @@ class Parser(object):
 
     def __init__(
         self,
-        gardenlinux_root: Optional[str] = None,
-        feature_dir_name: Optional[str] = "features",
-        logger: Optional[logging.Logger] = None,
+        gardenlinux_root: str | None = None,
+        feature_dir_name: str | None = "features",
+        logger: logging.Logger | None = None,
     ):
         """
         Constructor __init__(Parser)
@@ -59,9 +57,7 @@ class Parser(object):
         feature_base_dir = os.path.join(gardenlinux_root, feature_dir_name)
 
         if not os.access(feature_base_dir, os.R_OK):
-            raise ValueError(
-                "Feature directory given is invalid: {0}".format(feature_base_dir)
-            )
+            raise ValueError(f"Feature directory given is invalid: {feature_base_dir}")
 
         if logger is None or not logger.hasHandlers():
             logger = LoggerSetup.get_logger("gardenlinux.features")
@@ -72,7 +68,7 @@ class Parser(object):
         self._logger = logger
 
         self._logger.debug(
-            "features.Parser initialized for directory: {0}".format(feature_base_dir)
+            f"features.Parser initialized for directory: {feature_base_dir}"
         )
 
     @property
@@ -85,7 +81,7 @@ class Parser(object):
         """
 
         if self._graph is None:
-            feature_yaml_files = glob("{0}/*/info.yaml".format(self._feature_base_dir))
+            feature_yaml_files = glob(f"{self._feature_base_dir}/*/info.yaml")
             features = [self._read_feature_yaml(i) for i in feature_yaml_files]
 
             feature_graph = networkx.DiGraph()
@@ -101,7 +97,7 @@ class Parser(object):
                         continue
 
                     for ref in node_features[attr]:
-                        feature_yaml_file = "{0}/{1}/info.yaml".format(self._feature_base_dir, ref)
+                        feature_yaml_file = f"{self._feature_base_dir}/{ref}/info.yaml"
                         if not os.path.isfile(feature_yaml_file):
                             raise ValueError(
                                 f"feature {node} references feature {ref}, but {feature_yaml_file} does not exist"
@@ -120,7 +116,7 @@ class Parser(object):
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Optional[Callable[(str,), bool]] = None,
+        additional_filter_func: Callable[(str,), bool] | None = None,
     ) -> networkx.Graph:
         """
         Filters the features graph.
@@ -166,7 +162,7 @@ class Parser(object):
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Optional[Callable[(str,), bool]] = None,
+        additional_filter_func: Callable[(str,), bool] | None = None,
     ) -> dict:
         """
         Filters the features graph and returns it as a dict.
@@ -198,7 +194,7 @@ class Parser(object):
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Optional[Callable[(str,), bool]] = None,
+        additional_filter_func: Callable[(str,), bool] | None = None,
     ) -> list:
         """
         Filters the features graph and returns it as a list.
@@ -218,7 +214,7 @@ class Parser(object):
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Optional[Callable[(str,), bool]] = None,
+        additional_filter_func: Callable[(str,), bool] | None = None,
     ) -> str:
         """
         Filters the features graph and returns it as a string.

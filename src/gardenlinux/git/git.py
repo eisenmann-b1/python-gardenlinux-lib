@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from os import PathLike
 from pathlib import Path
 
@@ -9,7 +7,7 @@ from git import Repo
 from ..logger import LoggerSetup
 
 
-class Git(object):
+class Git:
     """
     Git operations handler based on the given Git directory.
 

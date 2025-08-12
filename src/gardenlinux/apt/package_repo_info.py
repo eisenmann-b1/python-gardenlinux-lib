@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 APT repositories
 """
-
-from typing import Optional
 
 from apt_repo import APTRepository
 
@@ -25,8 +21,8 @@ class GardenLinuxRepo(APTRepository):
     def __init__(
         self,
         dist: str,
-        url: Optional[str] = "http://packages.gardenlinux.io/gardenlinux",
-        components: Optional[list[str]] = None,
+        url: str | None = "http://packages.gardenlinux.io/gardenlinux",
+        components: list[str] | None = None,
     ):
         """
         Constructor __init__(GardenLinuxRepo)
@@ -90,7 +86,7 @@ def compare_gardenlinux_repo_version(
 
 
 def compare_repo(
-    a: GardenLinuxRepo, b: GardenLinuxRepo, available_in_both: Optional[bool] = False
+    a: GardenLinuxRepo, b: GardenLinuxRepo, available_in_both: bool | None = False
 ) -> list[tuple[str, str, str]]:
     """
     Compares differences between repositories given.

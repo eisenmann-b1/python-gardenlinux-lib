@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Flavors parser
 """
@@ -13,7 +11,7 @@ from ..constants import GL_FLAVORS_SCHEMA
 from ..logger import LoggerSetup
 
 
-class Parser(object):
+class Parser:
     """
     Parser for GardenLinux `flavors.yaml`.
 
@@ -45,9 +43,7 @@ class Parser(object):
         self._flavors_data = flavors_data
         self._logger = logger
 
-        self._logger.debug(
-            "flavors.Parser initialized with data: {0!r}".format(flavors_data)
-        )
+        self._logger.debug(f"flavors.Parser initialized with data: {flavors_data!r}")
 
     def filter(
         self,
@@ -76,7 +72,7 @@ class Parser(object):
         :since:  0.7.0
         """
 
-        self._logger.debug("flavors.Parser filtering with {0}".format(locals()))
+        self._logger.debug(f"flavors.Parser filtering with {locals()}")
 
         combinations = []  # Use a list for consistent order
 

@@ -1,17 +1,14 @@
-# -*- coding: utf-8 -*-
-
 """
 Canonical name (cname)
 """
 
 import re
-from typing import Optional
 
 from ..constants import ARCHS
 from .parser import Parser
 
 
-class CName(object):
+class CName:
     """
     Class to represent a canonical name (cname).
 
@@ -76,7 +73,7 @@ class CName(object):
                 self._version = version
 
     @property
-    def arch(self) -> Optional[str]:
+    def arch(self) -> str | None:
         """
         Returns the architecture for the cname parsed.
 
@@ -104,7 +101,7 @@ class CName(object):
         return cname
 
     @property
-    def commit_id(self) -> Optional[str]:
+    def commit_id(self) -> str | None:
         """
         Returns the commit ID if part of the cname parsed.
 
@@ -144,7 +141,7 @@ class CName(object):
         return re.split("[_-]", self._flavor, maxsplit=1)[0]
 
     @property
-    def version(self) -> Optional[str]:
+    def version(self) -> str | None:
         """
         Returns the version if part of the cname parsed.
 
@@ -154,7 +151,7 @@ class CName(object):
         return self._version
 
     @property
-    def version_and_commit_id(self) -> Optional[str]:
+    def version_and_commit_id(self) -> str | None:
         """
         Returns the version and commit ID if part of the cname parsed.
 

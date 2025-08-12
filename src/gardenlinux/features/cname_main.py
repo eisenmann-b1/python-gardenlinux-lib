@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
 gl-cname main entrypoint
@@ -57,9 +56,7 @@ def main():
             version, commit_id = get_version_and_commit_id_from_files(gardenlinux_root)
         except RuntimeError as exc:
             logging.warning(
-                "Failed to parse version information for GL root '{0}': {1}".format(
-                    gardenlinux_root, exc
-                )
+                f"Failed to parse version information for GL root '{gardenlinux_root}': {exc}"
             )
 
     cname = CName(args.cname, arch=arch, commit_id=commit_id, version=version)

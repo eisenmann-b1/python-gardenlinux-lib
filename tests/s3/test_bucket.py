@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Test the `Bucket` class in `src/gardenlinux/s3/bucket.py` by using
 mock AWS interactions provided by the `moto` module.

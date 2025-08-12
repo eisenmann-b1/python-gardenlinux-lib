@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 OCI container
 """
@@ -12,7 +10,6 @@ from configparser import UNNAMED_SECTION, ConfigParser
 from os import PathLike, fdopen, getenv
 from pathlib import Path
 from tempfile import mkstemp
-from typing import Optional
 from urllib.parse import urlsplit
 
 import jsonschema
@@ -47,8 +44,8 @@ class Container(Registry):
         self,
         container_url: str,
         insecure: bool = False,
-        token: Optional[str] = None,
-        logger: Optional[logging.Logger] = None,
+        token: str | None = None,
+        logger: logging.Logger | None = None,
     ):
         """
         Constructor __init__(Container)
@@ -128,10 +125,10 @@ class Container(Registry):
     def generate_manifest(
         self,
         cname: str,
-        architecture: Optional[str] = None,
-        version: Optional[str] = None,
-        commit: Optional[str] = None,
-        feature_set: Optional[str] = None,
+        architecture: str | None = None,
+        version: str | None = None,
+        commit: str | None = None,
+        feature_set: str | None = None,
     ):
         """
         Generates an OCI image manifest
@@ -241,7 +238,7 @@ class Container(Registry):
         new_entries = 0
 
         for file_path_name in manifests_dir.iterdir():
-            with open(file_path_name, "r") as fp:
+            with open(file_path_name) as fp:
                 manifest = json.loads(fp.read())
 
             if manifest["annotations"]["cname"] in index.manifests_as_dict:
@@ -292,8 +289,8 @@ class Container(Registry):
     def push_manifest(
         self,
         manifest: Manifest,
-        manifest_file: Optional[str] = None,
-        additional_tags: Optional[list] = None,
+        manifest_file: str | None = None,
+        additional_tags: list | None = None,
     ) -> Manifest:
         """
         Pushes an OCI image manifest.
@@ -354,9 +351,9 @@ class Container(Registry):
         self,
         manifest: Manifest,
         artifacts_with_metadata: list[dict],
-        artifacts_dir: Optional[PathLike | str] = ".build",
-        manifest_file: Optional[str] = None,
-        additional_tags: Optional[list] = None,
+        artifacts_dir: PathLike | str | None = ".build",
+        manifest_file: str | None = None,
+        additional_tags: list | None = None,
     ) -> Manifest:
         """
         Pushes an OCI image manifest and its artifacts.
@@ -421,9 +418,9 @@ class Container(Registry):
     def push_manifest_and_artifacts_from_directory(
         self,
         manifest: Manifest,
-        artifacts_dir: Optional[PathLike | str] = ".build",
-        manifest_file: Optional[str] = None,
-        additional_tags: Optional[list] = None,
+        artifacts_dir: PathLike | str | None = ".build",
+        manifest_file: str | None = None,
+        additional_tags: list | None = None,
     ) -> Manifest:
         """
         Pushes an OCI image manifest and its artifacts from the given directory.
@@ -519,10 +516,10 @@ class Container(Registry):
     def read_or_generate_manifest(
         self,
         cname: str,
-        architecture: Optional[str] = None,
-        version: Optional[str] = None,
-        commit: Optional[str] = None,
-        feature_set: Optional[str] = None,
+        architecture: str | None = None,
+        version: str | None = None,
+        commit: str | None = None,
+        feature_set: str | None = None,
     ) -> Manifest:
         """
         Reads from registry or generates the OCI image manifest.
@@ -555,7 +552,7 @@ class Container(Registry):
 
         return manifest
 
-    def _upload_index(self, index: dict, reference: Optional[str] = None) -> Response:
+    def _upload_index(self, index: dict, reference: str | None = None) -> Response:
         """
         Uploads the given OCI image index and returns the response.
 
