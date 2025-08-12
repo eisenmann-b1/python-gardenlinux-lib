@@ -88,7 +88,7 @@ class DebsrcFile(dict[str, Debsrc]):
 
         parsed_source = parsed_version = None
 
-        for line in f.readlines():
+        for line in f:
             if match := self.__re.match(line):
                 if i := match["source"]:
                     parsed_source = i

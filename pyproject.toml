@@ -10,6 +10,7 @@ select = [
 	"B", # flake8-bugbear: find likely bugs and design problems
 	"I", # isort: organize imports
 	"UP", # pyupgrade: upgrade syntax for newer versions
+	"FURB", # refurb: refurbish and modernize code
 ]
 ignore = [
 	"E501", # ignore line-length violations
