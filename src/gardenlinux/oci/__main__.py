@@ -10,7 +10,7 @@ from .container import Container
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """
     gl-oci click argument entrypoint
 
@@ -82,7 +82,7 @@ def push_manifest(
     manifest_file,
     insecure,
     additional_tag,
-):
+) -> None:
     """
     Push artifacts and the manifest from a directory to a registry.
 
@@ -136,7 +136,7 @@ def push_manifest(
     multiple=True,
     help="Additional tag to push the index with",
 )
-def update_index(container, version, manifest_folder, insecure, additional_tag):
+def update_index(container, version, manifest_folder, insecure, additional_tag) -> None:
     """
     Push a list of files from the `manifest_folder` to an index.
 
@@ -151,7 +151,7 @@ def update_index(container, version, manifest_folder, insecure, additional_tag):
     container.push_index_from_directory(manifest_folder, additional_tag)
 
 
-def main():
+def main() -> None:
     """
     gl-oci main()
 

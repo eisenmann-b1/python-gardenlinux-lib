@@ -37,7 +37,7 @@ import gardenlinux.s3.__main__ as s3m
         ),
     ],
 )
-def test_main_calls_correct_artifacts(argv, expected_method):
+def test_main_calls_correct_artifacts(argv, expected_method) -> None:
     with (
         patch.object(sys, "argv", argv),
         patch.object(s3m, "S3Artifacts") as mock_s3_cls,

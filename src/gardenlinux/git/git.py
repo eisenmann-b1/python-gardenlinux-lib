@@ -20,7 +20,7 @@ class Git:
                  Apache License, Version 2.0
     """
 
-    def __init__(self, git_directory=".", logger=None):
+    def __init__(self, git_directory: PathLike | str = ".", logger=None) -> None:
         """
         Constructor __init__(Git)
 
@@ -33,8 +33,7 @@ class Git:
         if logger is None or not logger.hasHandlers():
             logger = LoggerSetup.get_logger("gardenlinux.git")
 
-        if not isinstance(git_directory, PathLike):
-            git_directory = Path(git_directory)
+        git_directory = Path(git_directory)
 
         if not git_directory.is_dir():
             raise RuntimeError(f"Git directory given is invalid: {git_directory}")

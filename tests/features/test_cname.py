@@ -24,7 +24,7 @@ from gardenlinux.features import CName
         ),
     ],
 )
-def test_cname_flavor(input_cname: str, expected_output: dict):
+def test_cname_flavor(input_cname: str, expected_output: dict) -> None:
     """
     Tests if cname returns the dict with expected features.
 

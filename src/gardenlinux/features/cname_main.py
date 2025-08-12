@@ -19,7 +19,7 @@ from .cname import CName
 from .parser import Parser
 
 
-def main():
+def main() -> None:
     """
     gl-cname main()
 

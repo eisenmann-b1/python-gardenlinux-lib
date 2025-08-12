@@ -25,7 +25,7 @@ class Manifest(dict):
                  Apache License, Version 2.0
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """
         Constructor __init__(Manifest)
 
@@ -57,7 +57,7 @@ class Manifest(dict):
         return self["annotations"]["architecture"]
 
     @arch.setter
-    def arch(self, value):
+    def arch(self, value) -> None:
         """
         Sets the architecture of the OCI image manifest.
 
@@ -86,7 +86,7 @@ class Manifest(dict):
         return self["annotations"]["cname"]
 
     @cname.setter
-    def cname(self, value):
+    def cname(self, value) -> None:
         """
         Sets the GardenLinux canonical name of the OCI image manifest.
 
@@ -115,7 +115,7 @@ class Manifest(dict):
         return self["annotations"]["commit"]
 
     @commit.setter
-    def commit(self, value):
+    def commit(self, value) -> None:
         """
         Sets the GardenLinux Git commit ID of the OCI image manifest.
 
@@ -139,7 +139,7 @@ class Manifest(dict):
         return self._config_bytes
 
     @property
-    def digest(self):
+    def digest(self) -> str:
         """
         Returns the OCI image manifest digest.
 
@@ -167,7 +167,7 @@ class Manifest(dict):
         return self["annotations"]["feature_set"]
 
     @feature_set.setter
-    def feature_set(self, value):
+    def feature_set(self, value) -> None:
         """
         Sets the GardenLinux feature set of the OCI image manifest.
 
@@ -250,7 +250,7 @@ class Manifest(dict):
         return self["annotations"]["version"]
 
     @version.setter
-    def version(self, value):
+    def version(self, value) -> None:
         """
         Sets the GardenLinux version of the OCI image manifest.
 
@@ -262,7 +262,7 @@ class Manifest(dict):
         self._ensure_annotations_dict()
         self["annotations"]["version"] = value
 
-    def config_from_dict(self, config: dict, annotations: dict):
+    def config_from_dict(self, config: dict, annotations: dict) -> None:
         """
         Write a new OCI configuration to file, and generate oci metadata for it.
 
@@ -285,7 +285,7 @@ class Manifest(dict):
 
         self["config"] = config
 
-    def append_layer(self, layer):
+    def append_layer(self, layer) -> None:
         """
         Appends the given OCI image manifest layer to the manifest
 
@@ -328,13 +328,12 @@ class Manifest(dict):
 
         self["layers"].append(layer_dict)
 
-    def _ensure_annotations_dict(self):
+    def _ensure_annotations_dict(self) -> None:
         if "annotations" not in self:
             self["annotations"] = {}
 
-    def write_metadata_file(self, manifest_file_path_name):
-        if not isinstance(manifest_file_path_name, PathLike):
-            manifest_file_path_name = Path(manifest_file_path_name)
+    def write_metadata_file(self, manifest_file_path_name: PathLike | str) -> None:
+        manifest_file_path_name = Path(manifest_file_path_name)
 
         metadata_annotations = {
             "cname": self.cname,

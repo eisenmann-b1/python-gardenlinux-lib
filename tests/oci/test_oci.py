@@ -1,5 +1,7 @@
 import json
 import sys
+from collections.abc import Iterable
+from typing import Any
 
 import pytest
 from click.testing import CliRunner
@@ -26,7 +28,13 @@ from ..constants import (
 )
 
 
-def push_manifest(runner, version, arch, cname, additional_tags=None):
+def push_manifest(
+    runner: CliRunner,
+    version: str,
+    arch: str,
+    cname: str,
+    additional_tags: Iterable[str] | None = None,
+) -> bool:
     """Push manifest to registry and return success status"""
     print(f"Pushing manifest for {cname} {arch}")
 
@@ -67,7 +75,11 @@ def push_manifest(runner, version, arch, cname, additional_tags=None):
         return False
 
 
-def update_index(runner, version, additional_tags=None):
+def update_index(
+    runner: CliRunner,
+    version: str,
+    additional_tags: Iterable[str] | None = None,
+) -> bool:
     """Update index in registry and return success status"""
     print("Updating index")
 
@@ -98,7 +110,7 @@ def update_index(runner, version, additional_tags=None):
         return False
 
 
-def get_catalog(client):
+def get_catalog(client: Registry) -> list[str]:
     """Get catalog from registry and return repositories list"""
     catalog_resp = client.do_request(f"{REGISTRY_URL}/v2/_catalog")
 
@@ -107,10 +119,13 @@ def get_catalog(client):
     ), f"Failed to get catalog, status: {catalog_resp.status_code}"
 
     catalog_json = json.loads(catalog_resp.text)
-    return catalog_json.get("repositories", [])
+    repos_list = catalog_json.get("repositories", [])
+    assert isinstance(repos_list, list)
+
+    return repos_list
 
 
-def get_tags(client, repo):
+def get_tags(client: Registry, repo: str) -> list[str]:
     """Get tags for a repository"""
     tags_resp = client.do_request(f"{REGISTRY_URL}/v2/{repo}/tags/list")
 
@@ -119,10 +134,13 @@ def get_tags(client, repo):
     ), f"Failed to get tags for {repo}, status: {tags_resp.status_code}"
 
     tags_json = json.loads(tags_resp.text)
-    return tags_json.get("tags", [])
+    tags_list = tags_json.get("tags", [])
+    assert isinstance(tags_list, list)
+
+    return tags_list
 
 
-def get_manifest(client, repo, reference):
+def get_manifest(client: Registry, repo: str, reference: str) -> tuple[Any, str | None]:
     """Get manifest and digest for a repository reference"""
     # Create a simple request for the manifest
     manifest_resp = client.do_request(
@@ -143,7 +161,7 @@ def get_manifest(client, repo, reference):
     return manifest_json, digest
 
 
-def verify_index_manifest(manifest, expected_arch):
+def verify_index_manifest(manifest: Any, expected_arch: str) -> None:
     """Verify the index manifest has expected content"""
     assert manifest.get("schemaVersion") == 2, "Manifest should have schema version 2"
     assert "manifests" in manifest, "Manifest should contain manifests array"
@@ -158,7 +176,14 @@ def verify_index_manifest(manifest, expected_arch):
     assert found, f"Manifest should contain an entry for architecture {expected_arch}"
 
 
-def verify_combined_tag_manifest(manifest, arch, cname, version, feature_set, commit):
+def verify_combined_tag_manifest(
+    manifest: Any,
+    arch: str,
+    cname: str,
+    version: str,
+    feature_set: str,
+    commit: str,
+) -> None:
     """Verify the combined tag manifest has expected content"""
     assert manifest.get("schemaVersion") == 2, "Manifest should have schema version 2"
     assert "layers" in manifest, "Manifest should contain layers array"
@@ -185,8 +210,12 @@ def verify_combined_tag_manifest(manifest, arch, cname, version, feature_set, co
 
 
 def verify_additional_tags(
-    client, repo, additional_tags, reference_digest=None, fail_on_missing=True
-):
+    client: Registry,
+    repo: str,
+    additional_tags: Iterable[str],
+    reference_digest: str | None = None,
+    fail_on_missing: bool = True,
+) -> list[str]:
     """
     Verify that all additional tags exist and match the reference digest if provided.
 
@@ -200,7 +229,7 @@ def verify_additional_tags(
     Returns:
         List of missing tags
     """
-    missing_tags = []
+    missing_tags: list[str] = []
 
     for tag in additional_tags:
         print(f"Verifying additional tag: {tag}")
@@ -272,8 +301,12 @@ def verify_additional_tags(
     ],
 )
 def test_push_manifest_and_index(
-    version, arch, cname, additional_tags_index, additional_tags_manifest
-):
+    version: str,
+    arch: str,
+    cname: str,
+    additional_tags_index: list[str],
+    additional_tags_manifest: list[str],
+) -> None:
     print(f"\n\n=== Starting test for {cname} {arch} {version} ===")
     runner = CliRunner()
     repo_name = "gardenlinux-example"

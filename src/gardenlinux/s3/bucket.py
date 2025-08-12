@@ -33,7 +33,7 @@ class Bucket:
         endpoint_url: str | None = None,
         s3_resource_config: dict[str, Any] | None = None,
         logger: logging.Logger | None = None,
-    ):
+    ) -> None:
         """
         Constructor __init__(Bucket)
 
@@ -86,7 +86,7 @@ class Bucket:
 
         return getattr(self._bucket, name)
 
-    def download_file(self, key, file_name, *args, **kwargs):
+    def download_file(self, key, file_name, *args, **kwargs) -> None:
         """
         boto3: Download an S3 object to a file.
 
@@ -100,7 +100,7 @@ class Bucket:
 
         self._logger.info(f"Downloaded {key} from S3 to {file_name}")
 
-    def download_fileobj(self, key, fp, *args, **kwargs):
+    def download_fileobj(self, key, fp, *args, **kwargs) -> None:
         """
         boto3: Download an object from this bucket to a file-like-object.
 
@@ -114,7 +114,7 @@ class Bucket:
 
         self._logger.info(f"Downloaded {key} from S3 as binary data")
 
-    def read_cache_file_or_filter(self, cache_file, cache_ttl: int = 3600, **kwargs):
+    def read_cache_file_or_filter(self, cache_file: PathLike | str, cache_ttl: int = 3600, **kwargs):
         """
         Read S3 object keys from cache if valid or filter for S3 object keys.
 
@@ -126,8 +126,7 @@ class Bucket:
         :since: 0.9.0
         """
 
-        if not isinstance(cache_file, PathLike):
-            cache_file = Path(cache_file)
+        cache_file = Path(cache_file)
 
         if cache_file.exists() and (time() - cache_file.stat().st_mtime) < cache_ttl:
             with cache_file.open("r") as fp:
@@ -143,7 +142,7 @@ class Bucket:
 
         return artifacts
 
-    def upload_file(self, file_name, key, *args, **kwargs):
+    def upload_file(self, file_name, key, *args, **kwargs) -> None:
         """
         boto3: Upload a file to an S3 object.
 
@@ -157,7 +156,7 @@ class Bucket:
 
         self._logger.info(f"Uploaded {key} to S3 for {file_name}")
 
-    def upload_fileobj(self, fp, key, *args, **kwargs):
+    def upload_fileobj(self, fp, key, *args, **kwargs) -> None:
         """
         boto3: Upload a file-like object to this bucket.
 

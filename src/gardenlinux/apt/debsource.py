@@ -19,7 +19,7 @@ class Debsrc:
                  Apache License, Version 2.0
     """
 
-    def __init__(self, deb_source, deb_version):
+    def __init__(self, deb_source, deb_version) -> None:
         """
         Constructor __init__(Debsrc)
 
@@ -104,7 +104,7 @@ class DebsrcFile(dict[str, Debsrc]):
 
         self._set_source(parsed_source, parsed_version)
 
-    def _set_source(self, source: str, version: str) -> None:
+    def _set_source(self, source: str | None, version: str | None) -> None:
         """
         Sets the dict value based on the given source key.
 

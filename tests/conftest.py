@@ -29,7 +29,7 @@ from .constants import (
 from .helper import spawn_background_process
 
 
-def generate_test_certificates():
+def generate_test_certificates() -> None:
     """Generate self-signed certificates for testing using cryptography library"""
 
     os.makedirs(CERT_DIR, exist_ok=True)
@@ -80,12 +80,12 @@ def generate_test_certificates():
     print(f"Generated test certificates in {CERT_DIR}")
 
 
-def write_zot_config(config_dict, file_path):
+def write_zot_config(config_dict, file_path) -> None:
     with open(file_path, "w") as config_file:
         json.dump(config_dict, config_file, indent=4)
 
 
-def create_test_data():
+def create_test_data() -> None:
     """Generate test data for OCI registry tests (replaces build-test-data.sh)"""
     print("Creating fake artifacts...")
 
@@ -160,7 +160,7 @@ def zot_session():
         os.remove(zot_config_file_path)
 
 
-def pytest_sessionstart(session):
+def pytest_sessionstart(session) -> None:
     generate_test_certificates()
 
     # Replace the bash script call with our Python function
@@ -170,7 +170,7 @@ def pytest_sessionstart(session):
     Parser.set_default_gardenlinux_root_dir(GL_ROOT_DIR)
 
 
-def pytest_sessionfinish(session):
+def pytest_sessionfinish(session) -> None:
     if os.path.isfile(CERT_DIR + "/oci-sign.crt"):
         os.remove(CERT_DIR + "/oci-sign.crt")
     if os.path.isfile(CERT_DIR + "/oci-sign.key"):

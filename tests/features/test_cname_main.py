@@ -1,13 +1,14 @@
 import logging
 import sys
 import types
+from typing import Never
 
 import pytest
 
 import gardenlinux.features.cname_main as cname_main
 
 
-def test_main_happy(monkeypatch, capsys):
+def test_main_happy(monkeypatch, capsys) -> None:
     """
     Test the "Happy Path" of the main() function.
     """
@@ -20,7 +21,7 @@ def test_main_happy(monkeypatch, capsys):
         edges = [("f1", "f2")]
 
     class FakeParser:
-        def __init__(self, *a, **k):
+        def __init__(self, *a, **k) -> None:
             pass
 
         def filter(self, *a, **k):
@@ -41,7 +42,7 @@ def test_main_happy(monkeypatch, capsys):
     assert "amd64" in out
 
 
-def test_main_version_from_file(monkeypatch, capsys):
+def test_main_version_from_file(monkeypatch, capsys) -> None:
     """
     "Happy Path" test for grabbing the version and commit id from file in main().
     """
@@ -56,7 +57,7 @@ def test_main_version_from_file(monkeypatch, capsys):
     )
 
     class FakeParser:
-        def __init__(self, *a, **k):
+        def __init__(self, *a, **k) -> None:
             pass
 
         def filter(self, *a, **k):
@@ -75,7 +76,7 @@ def test_main_version_from_file(monkeypatch, capsys):
     assert "2.0-abcdef12" in capsys.readouterr().out
 
 
-def test_cname_main_version_file_missing_warns(monkeypatch, caplog):
+def test_cname_main_version_file_missing_warns(monkeypatch, caplog) -> None:
     """
     Check if a warning is logged when it fails to read version and commit id files.
 
@@ -88,7 +89,7 @@ def test_cname_main_version_file_missing_warns(monkeypatch, caplog):
     monkeypatch.setattr(sys, "argv", argv)
 
     # Patch version fatch function to raise RuntimeError (Simulates missing files)
-    def raise_runtime(_):
+    def raise_runtime(_) -> Never:
         raise RuntimeError("missing")
 
     monkeypatch.setattr(
@@ -97,7 +98,7 @@ def test_cname_main_version_file_missing_warns(monkeypatch, caplog):
 
     # Patch Parser for minimal valid graph
     class FakeParser:
-        def __init__(self, *a, **k):
+        def __init__(self, *a, **k) -> None:
             pass
 
         # Return object with in_degree method returning a node with zero dependencies
@@ -120,7 +121,7 @@ def test_cname_main_version_file_missing_warns(monkeypatch, caplog):
     assert "Failed to parse version information" in caplog.text
 
 
-def test_cname_main_invalid_cname_raises(monkeypatch):
+def test_cname_main_invalid_cname_raises(monkeypatch) -> None:
     """
     Test if AssertionError is raised with an invalid or malformed cname.
     """
@@ -133,7 +134,7 @@ def test_cname_main_invalid_cname_raises(monkeypatch):
         cname_main.main()
 
 
-def test_cname_main_missing_arch_in_cname_raises(monkeypatch):
+def test_cname_main_missing_arch_in_cname_raises(monkeypatch) -> None:
     """
     Test if an assertion error is raised when the arch argument is missing.
     """

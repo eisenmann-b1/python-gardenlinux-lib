@@ -17,7 +17,7 @@ class Index(dict):
                  Apache License, Version 2.0
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """
         Constructor __init__(Index)
 
@@ -62,7 +62,7 @@ class Index(dict):
 
         return manifests
 
-    def append_manifest(self, manifest):
+    def append_manifest(self, manifest) -> None:
         """
         Appends the given OCI image manifest to the index
 

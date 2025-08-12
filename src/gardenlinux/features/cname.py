@@ -21,7 +21,7 @@ class CName:
                  Apache License, Version 2.0
     """
 
-    def __init__(self, cname, arch=None, commit_id=None, version=None):
+    def __init__(self, cname, arch=None, commit_id=None, version=None) -> None:
         """
         Constructor __init__(CName)
 

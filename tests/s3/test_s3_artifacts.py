@@ -14,7 +14,7 @@ RELEASE_DATA = """
     """
 
 
-def test_s3artifacts_init_success(s3_setup):
+def test_s3artifacts_init_success(s3_setup) -> None:
     # Arrange
     env = s3_setup
 
@@ -26,13 +26,13 @@ def test_s3artifacts_init_success(s3_setup):
 
 
 @pytest.mark.xfail
-def test_s3artifacts_invalid_bucket():
+def test_s3artifacts_invalid_bucket() -> None:
     # Act / Assert
     with pytest.raises(Exception):  # noqa
         S3Artifacts("unknown-bucket")
 
 
-def test_download_to_directory_success(s3_setup):
+def test_download_to_directory_success(s3_setup) -> None:
     """
     Test download of multiple files to a directory on disk.
     """
@@ -57,7 +57,7 @@ def test_download_to_directory_success(s3_setup):
         assert (outdir / "file2").read_bytes() == b"data2"
 
 
-def test_download_to_directory_invalid_path(s3_setup):
+def test_download_to_directory_invalid_path(s3_setup) -> None:
     """
     Test proper handling of download attempt to invalid path.
     """
@@ -70,7 +70,7 @@ def test_download_to_directory_invalid_path(s3_setup):
         artifacts.download_to_directory({env.cname}, "/invalid/path/does/not/exist")
 
 
-def test_download_to_directory_non_pathlike_raises(s3_setup):
+def test_download_to_directory_non_pathlike_raises(s3_setup) -> None:
     """Raise RuntimeError if artifacts_dir is not a dir"""
     env = s3_setup
     artifacts = S3Artifacts(env.bucket_name)
@@ -78,7 +78,7 @@ def test_download_to_directory_non_pathlike_raises(s3_setup):
         artifacts.download_to_directory(env.cname, "nopath")
 
 
-def test_download_to_directory_no_metadata_raises(s3_setup):
+def test_download_to_directory_no_metadata_raises(s3_setup) -> None:
     """Should raise IndexError if bucket has no matching metadata object."""
     # Arrange
     env = s3_setup
@@ -92,7 +92,7 @@ def test_download_to_directory_no_metadata_raises(s3_setup):
         artifacts.download_to_directory(env.cname, tmpdir)
 
 
-def test_upload_from_directory_success(s3_setup):
+def test_upload_from_directory_success(s3_setup) -> None:
     """
     Test upload of multiple artifacts from disk to bucket
     """
@@ -117,7 +117,7 @@ def test_upload_from_directory_success(s3_setup):
     assert f"meta/singles/{env.cname}" in keys
 
 
-def test_upload_from_directory_with_delete(s3_setup):
+def test_upload_from_directory_with_delete(s3_setup) -> None:
     """
     Test that upload_from_directory deletes existing files before uploading
     when delete_before_push=True.
@@ -150,7 +150,7 @@ def test_upload_from_directory_with_delete(s3_setup):
     assert f"meta/singles/{env.cname}" in keys
 
 
-def test_upload_from_directory_arch_none_raises(monkeypatch, s3_setup):
+def test_upload_from_directory_arch_none_raises(monkeypatch, s3_setup) -> None:
     """Raise RuntimeError when CName has no arch"""
     # Arrange
     env = s3_setup
@@ -163,7 +163,7 @@ def test_upload_from_directory_arch_none_raises(monkeypatch, s3_setup):
     class DummyCName:
         arch = None
 
-        def __init__(self, cname):
+        def __init__(self, cname) -> None:
             pass
 
     monkeypatch.setattr(s3art, "CName", DummyCName)
@@ -174,7 +174,7 @@ def test_upload_from_directory_arch_none_raises(monkeypatch, s3_setup):
         artifacts.upload_from_directory(env.cname, env.tmp_path)
 
 
-def test_upload_from_directory_invalid_dir_raises(s3_setup):
+def test_upload_from_directory_invalid_dir_raises(s3_setup) -> None:
     """Raise RuntimeError if artifacts_dir is invalid"""
     env = s3_setup
     artifacts = S3Artifacts(env.bucket_name)
@@ -182,7 +182,7 @@ def test_upload_from_directory_invalid_dir_raises(s3_setup):
         artifacts.upload_from_directory(env.cname, "/invalid/path")
 
 
-def test_upload_from_directory_version_mismatch_raises(s3_setup):
+def test_upload_from_directory_version_mismatch_raises(s3_setup) -> None:
     """
     RuntimeError if version in release file does not match cname.
     """
@@ -198,7 +198,7 @@ def test_upload_from_directory_version_mismatch_raises(s3_setup):
         artifacts.upload_from_directory(env.cname, env.tmp_path)
 
 
-def test_upload_from_directory_commit_mismatch_raises(s3_setup):
+def test_upload_from_directory_commit_mismatch_raises(s3_setup) -> None:
     """Raise RuntimeError when commit ID is not matching with cname."""
     # Arrange
     env = s3_setup
@@ -210,7 +210,7 @@ def test_upload_from_directory_commit_mismatch_raises(s3_setup):
         artifacts.upload_from_directory(env.cname, env.tmp_path)
 
 
-def test_upload_directory_with_requirements_override(s3_setup):
+def test_upload_directory_with_requirements_override(s3_setup) -> None:
     """Ensure .requirements file values overide feature flag defaults."""
     # Arrange
     env = s3_setup

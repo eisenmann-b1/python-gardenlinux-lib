@@ -24,7 +24,7 @@ class Parser:
                  Apache License, Version 2.0
     """
 
-    def __init__(self, data, logger=None):
+    def __init__(self, data, logger=None) -> None:
         """
         Constructor __init__(Parser)
 

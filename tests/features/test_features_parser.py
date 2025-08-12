@@ -59,7 +59,7 @@ from ..constants import GL_ROOT_DIR
         ),
     ],
 )
-def test_parser_filter_as_dict(input_cname: str, expected_output: dict):
+def test_parser_filter_as_dict(input_cname: str, expected_output: dict) -> None:
     """
     Tests if parser_filter_as_dict returns the dict with expected features.
 

@@ -1,10 +1,13 @@
 import json
 import sys
+from pathlib import Path
+
+import pytest
 
 from gardenlinux.flavors import __main__ as fm
 
 
-def test_generate_markdown_table():
+def test_generate_markdown_table() -> None:
     # Arrange
     combos = [("amd64", "linux-amd64")]
 
@@ -17,7 +20,7 @@ def test_generate_markdown_table():
     assert "| linux"
 
 
-def test_parse_args(monkeypatch):
+def test_parse_args(monkeypatch: pytest.MonkeyPatch) -> None:
     """simulate CLI invocation and make sure parse_args reads them correctly"""
     # Arrange
     argv = [
@@ -62,7 +65,7 @@ def _make_parser_class(filter_result, group_result=None, remove_result=None):
     """
 
     class DummyParser:
-        def __init__(self, flavors_data):
+        def __init__(self, flavors_data) -> None:
             self._data = flavors_data
 
         def filter(self, **kwargs):
@@ -97,20 +100,24 @@ def _make_parser_class(filter_result, group_result=None, remove_result=None):
     return DummyParser
 
 
-def _make_git_class(tmp_path):
+def _make_git_class(tmp_path: str):
     """
     Factory to create a fake Parser class
     Instances ignore the favors_data passed to __init__.
     """
 
     class DummyGit:
-        def __init__(self):
+        def __init__(self) -> None:
             self.root = tmp_path
 
     return DummyGit
 
 
-def test_main_json_by_arch_prints_json(tmp_path, monkeypatch, capsys):
+def test_main_json_by_arch_prints_json(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     # Arrange
     # prepare flavors.yaml at tmp path
     flavors_file = tmp_path / "flavors.yaml"
@@ -136,8 +143,10 @@ def test_main_json_by_arch_prints_json(tmp_path, monkeypatch, capsys):
 
 
 def test_main_json_by_arch_with_no_arch_strips_arch_suffix(
-    tmp_path, monkeypatch, capsys
-):
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     # Arrange
     flavors_file = tmp_path / "flavors.yaml"
     flavors_file.write_text("dummy: content")
@@ -163,7 +172,11 @@ def test_main_json_by_arch_with_no_arch_strips_arch_suffix(
     assert parsed == {"x86": ["linux"], "arm": ["android"]}
 
 
-def test_main_markdown_table_branch(tmp_path, monkeypatch, capsys):
+def test_main_markdown_table_branch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     # Arrange
     flavors_file = tmp_path / "flavors.yaml"
     flavors_file.write_text("dummy: content")
@@ -187,7 +200,11 @@ def test_main_markdown_table_branch(tmp_path, monkeypatch, capsys):
     assert "| Platform" in out
 
 
-def test_main_default_prints_flavors_list(tmp_path, monkeypatch, capsys):
+def test_main_default_prints_flavors_list(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     # Arrange
     flavors_file = tmp_path / "flavors.yaml"
     flavors_file.write_text("dummy: content")
@@ -211,7 +228,11 @@ def test_main_default_prints_flavors_list(tmp_path, monkeypatch, capsys):
     assert sorted(lines) == sorted(["linux-x86", "android-arm"])
 
 
-def test_main_default_prints_git_flavors_list(tmp_path, monkeypatch, capsys):
+def test_main_default_prints_git_flavors_list(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     # Arrange
     flavors_file = tmp_path / "flavors.yaml"
     flavors_file.write_text("dummy: content")

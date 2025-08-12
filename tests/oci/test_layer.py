@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 import gardenlinux.oci.layer as gl_layer
@@ -6,7 +8,7 @@ import gardenlinux.oci.layer as gl_layer
 class DummyLayer:
     """Minimal stub for oras.oci.Layer"""
 
-    def __init__(self, blob_path, media_type=None, is_dir=False):
+    def __init__(self, blob_path, media_type=None, is_dir=False) -> None:
         self._init_args = (blob_path, media_type, is_dir)
 
     def to_dict(self):
@@ -14,13 +16,13 @@ class DummyLayer:
 
 
 @pytest.fixture(autouse=True)
-def patch__Layer(monkeypatch):
+def patch__Layer(monkeypatch: pytest.MonkeyPatch) -> None:
     """Replace oras.oci.Layer with DummyLayer in Layer's module."""
     monkeypatch.setattr(gl_layer, "_Layer", DummyLayer)
     return
 
 
-def test_dict_property_returns_with_annotations(tmp_path):
+def test_dict_property_returns_with_annotations(tmp_path: Path) -> None:
     """dict property should merge _Layer.to_dict() with annotations."""
     # Arrange
     blob = tmp_path / "blob.txt"
@@ -36,7 +38,7 @@ def test_dict_property_returns_with_annotations(tmp_path):
     assert result["annotations"]["org.opencontainers.image.title"] == "blob.txt"
 
 
-def test_getitem_and_delitem_annotations(tmp_path):
+def test_getitem_and_delitem_annotations(tmp_path: Path) -> None:
     """getitem should return annotations, delitem should clear them."""
     # Arrange
     blob = tmp_path / "blob.txt"
@@ -53,7 +55,7 @@ def test_getitem_and_delitem_annotations(tmp_path):
     assert l._annotations == {}
 
 
-def test_getitem_invalid_key_raises(tmp_path):
+def test_getitem_invalid_key_raises(tmp_path: Path) -> None:
     """getitem with unsupported key should raise KeyError."""
     # Arrange
     blob = tmp_path / "blob.txt"
@@ -65,7 +67,7 @@ def test_getitem_invalid_key_raises(tmp_path):
         _ = l["invalid"]
 
 
-def test_setitem_annotations(tmp_path):
+def test_setitem_annotations(tmp_path: Path) -> None:
     """setitem with supported keys should set annotations"""
     # Arrange
     blob = tmp_path / "blob.txt"
@@ -80,7 +82,7 @@ def test_setitem_annotations(tmp_path):
     assert l._annotations == new_ann
 
 
-def test_setitem_annotations_invalid_raises(tmp_path):
+def test_setitem_annotations_invalid_raises(tmp_path: Path) -> None:
     # Arrange
     blob = tmp_path / "blob.txt"
     blob.write_text("data")
@@ -91,7 +93,7 @@ def test_setitem_annotations_invalid_raises(tmp_path):
         _ = l["invalid"]
 
 
-def test_len_iter(tmp_path):
+def test_len_iter(tmp_path: Path) -> None:
     # Arrange
     blob = tmp_path / "blob.txt"
     blob.write_text("data")
@@ -105,7 +107,7 @@ def test_len_iter(tmp_path):
     assert len(keys) == 1
 
 
-def test_gen_metadata_from_file(tmp_path):
+def test_gen_metadata_from_file(tmp_path: Path) -> None:
     # Arrange
     blob = tmp_path / "blob.tar"
     blob.write_text("data")
@@ -121,7 +123,7 @@ def test_gen_metadata_from_file(tmp_path):
     assert metadata["annotations"]["io.gardenlinux.image.layer.architecture"] == arch
 
 
-def test_lookup_media_type_for_file_name(tmp_path):
+def test_lookup_media_type_for_file_name(tmp_path: Path) -> None:
     # Arrange
     blob = tmp_path / "blob.tar"
     blob.write_text("data")
@@ -133,7 +135,7 @@ def test_lookup_media_type_for_file_name(tmp_path):
     assert media_type == GL_MEDIA_TYPE_LOOKUP["tar"]
 
 
-def test_lookup_media_type_for_file_name_invalid_raises(tmp_path):
+def test_lookup_media_type_for_file_name_invalid_raises(tmp_path: Path) -> None:
     # Arrange / Act / Assert
     with pytest.raises(ValueError):
         gl_layer.Layer.lookup_media_type_for_file_name(tmp_path / "unknown.xyz")

@@ -35,12 +35,16 @@ class Parser:
     Default GardenLinux root directory
     """
 
+    _graph: networkx.DiGraph | None
+    _logger: logging.Logger
+    _feature_base_dir: Path
+
     def __init__(
         self,
         gardenlinux_root: str | None = None,
         feature_dir_name: str | None = "features",
         logger: logging.Logger | None = None,
-    ):
+    ) -> None:
         """
         Constructor __init__(Parser)
 
@@ -72,11 +76,11 @@ class Parser:
         )
 
     @property
-    def graph(self) -> networkx.Graph:
+    def graph(self) -> networkx.DiGraph:
         """
         Returns the features graph based on the GardenLinux features directory.
 
-        :return: (networkx.Graph) Features graph
+        :return: (networkx.DiGraph) Features graph
         :since:  0.7.0
         """
 
@@ -116,8 +120,8 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
-    ) -> networkx.Graph:
+        additional_filter_func: Callable[[str], bool] | None = None,
+    ) -> networkx.DiGraph:
         """
         Filters the features graph.
 
@@ -125,7 +129,7 @@ class Parser:
         :param ignore_excludes:        Ignore `exclude` feature files
         :param additional_filter_func: Additional filter function
 
-        :return: (networkx.Graph) Filtered features graph
+        :return: (networkx.DiGraph) Filtered features graph
         :since:  0.7.0
         """
 
@@ -162,7 +166,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> dict:
         """
         Filters the features graph and returns it as a dict.
@@ -194,7 +198,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> list:
         """
         Filters the features graph and returns it as a list.
@@ -214,7 +218,7 @@ class Parser:
         self,
         cname: str,
         ignore_excludes: bool = False,
-        additional_filter_func: Callable[(str,), bool] | None = None,
+        additional_filter_func: Callable[[str], bool] | None = None,
     ) -> str:
         """
         Filters the features graph and returns it as a string.
@@ -232,7 +236,8 @@ class Parser:
 
         return ",".join(features)
 
-    def _exclude_from_filter_set(graph, input_features, filter_set):
+    @staticmethod
+    def _exclude_from_filter_set(graph, input_features, filter_set) -> None:
         """
         Removes the given `filter_set` out of `input_features`.
 
@@ -372,7 +377,7 @@ class Parser:
         return node.get("content", {}).get("type")
 
     @staticmethod
-    def set_default_gardenlinux_root_dir(root_dir):
+    def set_default_gardenlinux_root_dir(root_dir) -> None:
         """
         Sets the default GardenLinux root directory used.
 
@@ -394,7 +399,7 @@ class Parser:
         :since:  0.7.0
         """
 
-        def key_function(node):
+        def key_function(node) -> str:
             prefix_map = {"platform": "0", "element": "1", "flag": "2"}
             node_type = Parser._get_graph_node_type(graph.nodes.get(node, {}))
             prefix = prefix_map[node_type]

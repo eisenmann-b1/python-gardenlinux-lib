@@ -10,7 +10,7 @@ from os import PathLike, stat
 from os.path import basename
 from pathlib import Path
 from tempfile import TemporaryFile
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlencode
 
 import yaml
@@ -38,7 +38,7 @@ class S3Artifacts:
         endpoint_url: str | None = None,
         s3_resource_config: dict[str, Any] | None = None,
         logger: logging.Logger | None = None,
-    ):
+    ) -> None:
         """
         Constructor __init__(S3Artifacts)
 
@@ -66,8 +66,8 @@ class S3Artifacts:
     def download_to_directory(
         self,
         cname,
-        artifacts_dir,
-    ):
+        artifacts_dir: PathLike | str,
+    ) -> None:
         """
         Download S3 artifacts to a given directory.
 
@@ -77,8 +77,7 @@ class S3Artifacts:
         :since: 0.8.0
         """
 
-        if not isinstance(artifacts_dir, PathLike):
-            artifacts_dir = Path(artifacts_dir)
+        artifacts_dir = Path(artifacts_dir)
 
         if not artifacts_dir.is_dir():
             raise RuntimeError(f"Artifacts directory given is invalid: {artifacts_dir}")
@@ -99,9 +98,9 @@ class S3Artifacts:
     def upload_from_directory(
         self,
         cname,
-        artifacts_dir,
+        artifacts_dir: PathLike | str,
         delete_before_push=False,
-    ):
+    ) -> None:
         """
         Pushes S3 artifacts to the underlying bucket.
 
@@ -112,9 +111,7 @@ class S3Artifacts:
         :since: 0.8.0
         """
 
-        if not isinstance(artifacts_dir, PathLike):
-            artifacts_dir = Path(artifacts_dir)
-
+        artifacts_dir = Path(artifacts_dir)
         cname_object = CName(cname)
 
         if cname_object.arch is None:
@@ -176,7 +173,7 @@ class S3Artifacts:
             "base_image": None,
             "build_committish": commit_hash,
             "build_timestamp": datetime.fromtimestamp(release_timestamp).isoformat(),
-            "gardenlinux_epoch": int(cname_object.version.split(".", 1)[0]),
+            "gardenlinux_epoch": int(cast(str, cname_object.version).split(".", 1)[0]),
             "logs": None,
             "modifiers": feature_list,
             "require_uefi": require_uefi,

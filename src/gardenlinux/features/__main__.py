@@ -9,7 +9,8 @@ import logging
 import os
 from functools import reduce
 from os import path
-from typing import Any
+
+import networkx as nx
 
 from .cname import CName
 from .parser import Parser
@@ -164,7 +165,7 @@ def main() -> None:
         print(f"{version}-{commit_id}")
 
 
-def get_cname_base(sorted_features: set[str]):
+def get_cname_base(sorted_features: list[str]) -> str:
     """
     Get the base cname for the feature set given.
 
@@ -206,11 +207,11 @@ def get_version_and_commit_id_from_files(gardenlinux_root: str) -> tuple[str, st
     return (version, commit_id)
 
 
-def get_minimal_feature_set(graph: Any) -> set[str]:
+def get_minimal_feature_set(graph: nx.DiGraph) -> set[str]:
     """
     Returns the minimal set of features described by the given graph.
 
-    :param graph: networkx.Digraph
+    :param graph: networkx.DiGraph
 
     :return: (set) Minimal set of features
     :since:  0.7.0
@@ -219,7 +220,7 @@ def get_minimal_feature_set(graph: Any) -> set[str]:
     return {node for (node, degree) in graph.in_degree() if degree == 0}
 
 
-def graph_as_mermaid_markup(flavor: str, graph: Any) -> str:
+def graph_as_mermaid_markup(flavor: str, graph: nx.DiGraph) -> str:
     """
     Generates a mermaid.js representation of the graph.
     This is helpful to identify dependencies between features.
@@ -228,7 +229,7 @@ def graph_as_mermaid_markup(flavor: str, graph: Any) -> str:
     https://mermaid.js.org/syntax/flowchart.html?id=flowcharts-basic-syntax
 
     :param flavor: Flavor name
-    :param graph:  networkx.Digraph
+    :param graph:  networkx.DiGraph
 
     :return: (str) mermaid.js representation
     :since:  0.7.0

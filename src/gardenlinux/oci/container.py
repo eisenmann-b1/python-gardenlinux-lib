@@ -46,7 +46,7 @@ class Container(Registry):
         insecure: bool = False,
         token: str | None = None,
         logger: logging.Logger | None = None,
-    ):
+    ) -> None:
         """
         Constructor __init__(Container)
 
@@ -215,8 +215,8 @@ class Container(Registry):
         )
 
     def push_index_from_directory(
-        self, manifests_dir: PathLike | str, additional_tags: list = None
-    ):
+        self, manifests_dir: PathLike | str, additional_tags: list | None = None
+    ) -> None:
         """
         Replaces an old manifest entries with new ones
 
@@ -226,8 +226,7 @@ class Container(Registry):
         :since: 0.7.0
         """
 
-        if not isinstance(manifests_dir, PathLike):
-            manifests_dir = Path(manifests_dir)
+        manifests_dir = Path(manifests_dir)
 
         index = self.read_or_generate_index()
 
@@ -272,7 +271,7 @@ class Container(Registry):
                 additional_tags,
             )
 
-    def push_index_for_tags(self, index, tags):
+    def push_index_for_tags(self, index, tags) -> None:
         """
         Push tags for an given OCI image index.
 
@@ -351,7 +350,7 @@ class Container(Registry):
         self,
         manifest: Manifest,
         artifacts_with_metadata: list[dict],
-        artifacts_dir: PathLike | str | None = ".build",
+        artifacts_dir: PathLike | str = ".build",
         manifest_file: str | None = None,
         additional_tags: list | None = None,
     ) -> Manifest:
@@ -371,8 +370,7 @@ class Container(Registry):
         if not isinstance(manifest, Manifest):
             raise RuntimeError("Artifacts image manifest given is invalid")
 
-        if not isinstance(artifacts_dir, PathLike):
-            artifacts_dir = Path(artifacts_dir)
+        artifacts_dir = Path(artifacts_dir)
 
         container_name = f"{self._container_name}:{self._container_version}"
 
@@ -418,7 +416,7 @@ class Container(Registry):
     def push_manifest_and_artifacts_from_directory(
         self,
         manifest: Manifest,
-        artifacts_dir: PathLike | str | None = ".build",
+        artifacts_dir: PathLike | str = ".build",
         manifest_file: str | None = None,
         additional_tags: list | None = None,
     ) -> Manifest:
@@ -434,8 +432,7 @@ class Container(Registry):
         :since:  0.7.0
         """
 
-        if not isinstance(artifacts_dir, PathLike):
-            artifacts_dir = Path(artifacts_dir)
+        artifacts_dir = Path(artifacts_dir)
 
         if not isinstance(manifest, Manifest):
             raise RuntimeError("Artifacts image manifest given is invalid")
@@ -443,7 +440,7 @@ class Container(Registry):
         # Scan and extract nested artifacts
         for file_path_name in artifacts_dir.glob("*.pxe.tar.gz"):
             self._logger.info(f"Found nested artifact {file_path_name}")
-            extract_targz(file_path_name, artifacts_dir)
+            extract_targz(str(file_path_name), str(artifacts_dir))
 
         files = [
             file_name for file_name in artifacts_dir.iterdir() if file_name.is_file()
@@ -478,7 +475,7 @@ class Container(Registry):
             additional_tags,
         )
 
-    def push_manifest_for_tags(self, manifest, tags):
+    def push_manifest_for_tags(self, manifest, tags) -> None:
         """
         Push tags for an given OCI image manifest.
 
@@ -552,7 +549,7 @@ class Container(Registry):
 
         return manifest
 
-    def _upload_index(self, index: dict, reference: str | None = None) -> Response:
+    def _upload_index(self, index: Index, reference: str | None = None) -> Response:
         """
         Uploads the given OCI image index and returns the response.
 

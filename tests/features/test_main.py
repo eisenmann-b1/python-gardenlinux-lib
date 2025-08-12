@@ -1,6 +1,7 @@
 import sys
 import types
 
+import networkx as nx
 import pytest
 
 import gardenlinux.features.__main__ as fema
@@ -10,7 +11,7 @@ import gardenlinux.features.__main__ as fema
 # -------------------------------
 
 
-def test_get_cname_base():
+def test_get_cname_base() -> None:
     # Arrange
     sorted_features = ["base", "_hidden", "extra"]
 
@@ -21,13 +22,13 @@ def test_get_cname_base():
     assert result == "base_hidden-extra"
 
 
-def test_get_cname_base_empty_raises():
+def test_get_cname_base_empty_raises() -> None:
     # get_cname_base with empty iterable raises TypeError
     with pytest.raises(TypeError):
         fema.get_cname_base([])
 
 
-def test_sort_return_intersection_subset():
+def test_sort_return_intersection_subset() -> None:
     # Arrange
     input_set = {"a", "c"}
     order_list = ["a", "b", "c", "d"]
@@ -39,7 +40,7 @@ def test_sort_return_intersection_subset():
     assert result == ["a", "c"]
 
 
-def test_sort_subset_nomatch():
+def test_sort_subset_nomatch() -> None:
     # Arrange
     input_set = {"x", "y"}
     order_list = ["a", "b", "c"]
@@ -51,7 +52,7 @@ def test_sort_subset_nomatch():
     assert result == []
 
 
-def test_sort_subset_with_empty_order_list():
+def test_sort_subset_with_empty_order_list() -> None:
     # Arrange
     input_set = {"a", "b"}
     order_list = []
@@ -61,9 +62,9 @@ def test_sort_subset_with_empty_order_list():
     assert result == []
 
 
-def test_graph_mermaid():
+def test_graph_mermaid() -> None:
     # Arrange
-    class FakeGraph:
+    class FakeGraph(nx.DiGraph):
         edges = [("a", "b"), ("b", "c")]
 
     flavor = "test"
@@ -77,9 +78,9 @@ def test_graph_mermaid():
     assert "b-->c" in markup
 
 
-def test_get_minimal_feature_set_filters():
+def test_get_minimal_feature_set_filters() -> None:
     # Arrange
-    class FakeGraph:
+    class FakeGraph(nx.DiGraph):
         def in_degree(self):
             return [("a", 0), ("b", 1), ("c", 0)]
 
@@ -92,7 +93,7 @@ def test_get_minimal_feature_set_filters():
     assert result == {"a", "c"}
 
 
-def test_get_version_and_commit_from_file(tmp_path):
+def test_get_version_and_commit_from_file(tmp_path) -> None:
     # Arrange
     commit_file = tmp_path / "COMMIT"
     commit_file.write_text("abcdef12\n")
@@ -107,7 +108,7 @@ def test_get_version_and_commit_from_file(tmp_path):
     assert commit == "abcdef12"
 
 
-def test_get_version_missing_file_raises(tmp_path):
+def test_get_version_missing_file_raises(tmp_path) -> None:
     # Arrange (one file only)
     (tmp_path / "COMMIT").write_text("abcdef1234\n")
 
@@ -119,7 +120,7 @@ def test_get_version_missing_file_raises(tmp_path):
 # -------------------------------
 # Tests for main()
 # -------------------------------
-def test_main_prints_arch(monkeypatch, capsys):
+def test_main_prints_arch(monkeypatch, capsys) -> None:
     # Arrange
     argv = ["prog", "--arch", "amd64", "--features", "f1", "--version", "1.0", "arch"]
     monkeypatch.setattr(sys, "argv", argv)
@@ -133,7 +134,7 @@ def test_main_prints_arch(monkeypatch, capsys):
     assert "amd64" in out
 
 
-def test_main_prints_commit_id(monkeypatch, capsys):
+def test_main_prints_commit_id(monkeypatch, capsys) -> None:
     # Arrange
     argv = ["prog", "--arch", "amd64", "--features", "f1", "commit_id"]
     monkeypatch.setattr(sys, "argv", argv)
@@ -154,7 +155,7 @@ def test_main_prints_commit_id(monkeypatch, capsys):
     assert captured.out.strip() == "abcdef12"
 
 
-def test_main_prints_flags_elements_platforms(monkeypatch, capsys):
+def test_main_prints_flags_elements_platforms(monkeypatch, capsys) -> None:
     # Arrange
     argv = [
         "prog",
@@ -169,7 +170,7 @@ def test_main_prints_flags_elements_platforms(monkeypatch, capsys):
     monkeypatch.setattr(sys, "argv", argv)
 
     class FakeParser:
-        def __init__(self, *a, **k):
+        def __init__(self, *a, **k) -> None:
             pass
 
         @staticmethod
@@ -190,7 +191,7 @@ def test_main_prints_flags_elements_platforms(monkeypatch, capsys):
     assert "flag1" in out
 
 
-def test_main_prints_version(monkeypatch, capsys):
+def test_main_prints_version(monkeypatch, capsys) -> None:
     # Arrange
     argv = ["prog", "--arch", "amd64", "--features", "f1", "version"]
     monkeypatch.setattr(sys, "argv", argv)
@@ -211,7 +212,7 @@ def test_main_prints_version(monkeypatch, capsys):
     assert captured.out.strip() == "1.2.3"
 
 
-def test_main_prints_version_and_commit_id(monkeypatch, capsys):
+def test_main_prints_version_and_commit_id(monkeypatch, capsys) -> None:
     # Arrange
     argv = ["prog", "--arch", "amd64", "--features", "f1", "version_and_commit_id"]
     monkeypatch.setattr(sys, "argv", argv)
@@ -232,7 +233,7 @@ def test_main_prints_version_and_commit_id(monkeypatch, capsys):
     assert captured.out.strip() == "1.2.3-abcdef12"
 
 
-def test_main_arch_raises_missing_verison(monkeypatch, capsys):
+def test_main_arch_raises_missing_verison(monkeypatch, capsys) -> None:
     # Arrange
     argv = ["prog", "--arch", "amd64", "--features", "f1", "arch"]
     monkeypatch.setattr(sys, "argv", argv)
@@ -243,9 +244,9 @@ def test_main_arch_raises_missing_verison(monkeypatch, capsys):
         fema.main()
 
 
-def test_main_with_cname_print_cname(monkeypatch, capsys):
+def test_main_with_cname_print_cname(monkeypatch, capsys) -> None:
     # Arrange
-    class FakeGraph:
+    class FakeGraph(nx.DiGraph):
         def in_degree(self):
             # Simulate a graph where one feature has no dependencies
             return [("f1", 0)]
@@ -282,7 +283,7 @@ def test_main_with_cname_print_cname(monkeypatch, capsys):
     assert "flav" in captured.out
 
 
-def test_main_requires_feature_or_cname(monkeypatch):
+def test_main_requires_feature_or_cname(monkeypatch) -> None:
     # Arrange
     monkeypatch.setattr(sys, "argv", ["prog", "arch"])
     monkeypatch.setattr(fema, "Parser", lambda *a, **kw: None)
@@ -292,7 +293,7 @@ def test_main_requires_feature_or_cname(monkeypatch):
         fema.main()
 
 
-def test_main_raises_no_arch_no_default(monkeypatch):
+def test_main_raises_no_arch_no_default(monkeypatch) -> None:
     # Arrange
     # args.type == 'cname, arch is None and no default_arch set
     argv = ["prog", "--features", "f1", "cname"]
@@ -300,7 +301,7 @@ def test_main_raises_no_arch_no_default(monkeypatch):
     monkeypatch.setattr(
         fema,
         "Parser",
-        lambda *a, **kw: types.SimpleNamesapce(filter=lambda *a, **k: None),
+        lambda *a, **kw: types.SimpleNamespace(filter=lambda *a, **k: None),
     )
     monkeypatch.setattr(fema, "CName", lambda *a, **kw: None)
 

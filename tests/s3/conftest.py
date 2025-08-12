@@ -1,5 +1,8 @@
+from collections.abc import Buffer, Generator
 from dataclasses import dataclass
 from hashlib import md5, sha256
+from pathlib import Path
+from typing import BinaryIO, Protocol, Self
 
 import boto3
 import pytest
@@ -9,11 +12,22 @@ BUCKET_NAME = "test-bucket"
 REGION = "us-east-1"
 
 
+class _Hash(Protocol):
+    digest_size: int
+    block_size: int
+    name: str
+
+    def update(self, data: Buffer) -> None: ...
+    def digest(self) -> bytes: ...
+    def hexdigest(self) -> str: ...
+    def copy(self) -> Self: ...
+
+
 @dataclass(frozen=True)
 class S3Env:
     s3: object
     bucket_name: str
-    tmp_path: str
+    tmp_path: Path
     cname: str
 
 
@@ -30,7 +44,7 @@ def make_cname(
 
 
 # Helpers to compute digests for fake files
-def dummy_digest(data: bytes, algo: str) -> str:
+def dummy_digest(data: BinaryIO, algo: str) -> _Hash:
     """
     Dummy for file_digest() to compute hashes for in-memory byte streams
     """
@@ -46,7 +60,7 @@ def dummy_digest(data: bytes, algo: str) -> str:
 
 
 @pytest.fixture(autouse=True)
-def s3_setup(tmp_path, monkeypatch):
+def s3_setup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Generator[S3Env]:
     """
     Provides a clean S3 setup for each test.
     """
