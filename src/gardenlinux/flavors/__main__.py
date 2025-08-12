@@ -170,7 +170,7 @@ def main():
         # If --no-arch, strip architectures from the grouped output
         if args.no_arch:
             grouped_combinations = {
-                arch: sorted(set(item.replace(f"-{arch}", "") for item in items))
+                arch: sorted({item.replace(f"-{arch}", "") for item in items})
                 for arch, items in grouped_combinations.items()
             }
 
@@ -181,7 +181,7 @@ def main():
         if args.no_arch:
             printable_combinations = sorted(set(Parser.remove_arch(combinations)))
         else:
-            printable_combinations = sorted(set(comb[1] for comb in combinations))
+            printable_combinations = sorted({comb[1] for comb in combinations})
 
         print("\n".join(sorted(set(printable_combinations))))
 
