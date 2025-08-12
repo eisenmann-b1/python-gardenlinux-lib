@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 import tempfile
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from cryptography import x509
@@ -57,8 +57,8 @@ def generate_test_certificates() -> None:
         .issuer_name(issuer)
         .public_key(private_key.public_key())
         .serial_number(x509.random_serial_number())
-        .not_valid_before(datetime.utcnow())
-        .not_valid_after(datetime.utcnow() + timedelta(days=365))
+        .not_valid_before(datetime.now(tz=UTC))
+        .not_valid_after(datetime.now(tz=UTC) + timedelta(days=365))
         .sign(private_key, hashes.SHA256())
     )
 
