@@ -17,7 +17,7 @@ class DummyLayer:
 def patch__Layer(monkeypatch):
     """Replace oras.oci.Layer with DummyLayer in Layer's module."""
     monkeypatch.setattr(gl_layer, "_Layer", DummyLayer)
-    yield
+    return
 
 
 def test_dict_property_returns_with_annotations(tmp_path):
