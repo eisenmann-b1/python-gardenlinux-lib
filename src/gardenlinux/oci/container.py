@@ -110,7 +110,7 @@ class Container(Registry):
                 try:
                     self.login(username, password)
                 except Exception as login_error:
-                    self._logger.error(f"Login error: {str(login_error)}")
+                    self._logger.error(f"Login error: {login_error!s}")
 
     def generate_index(self):
         """

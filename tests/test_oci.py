@@ -63,7 +63,7 @@ def push_manifest(runner, version, arch, cname, additional_tags=None):
         print(f"Push manifest output: {result.output}")
         return result.exit_code == 0
     except Exception as e:
-        print(f"Error during push manifest: {str(e)}")
+        print(f"Error during push manifest: {e!s}")
         return False
 
 
@@ -94,7 +94,7 @@ def update_index(runner, version, additional_tags=None):
         print(f"Update index output: {result.output}")
         return result.exit_code == 0
     except Exception as e:
-        print(f"Error during update index: {str(e)}")
+        print(f"Error during update index: {e!s}")
         return False
 
 
@@ -234,7 +234,7 @@ def verify_additional_tags(
             print(f"✓ Successfully verified additional tag {tag} with digest: {digest}")
 
         except Exception as e:
-            print(f"✗ Error verifying tag {tag}: {str(e)}")
+            print(f"✗ Error verifying tag {tag}: {e!s}")
             missing_tags.append(tag)
 
     # If any tags are missing and fail_on_missing is True, fail the test
