@@ -6,9 +6,9 @@ gl-features-parse main entrypoint
 
 import argparse
 import logging
-import os
 from functools import reduce
-from os import path
+from os import PathLike
+from pathlib import Path
 
 import networkx as nx
 
@@ -42,7 +42,7 @@ def main() -> None:
     parser.add_argument("--arch", dest="arch")
     parser.add_argument("--cname", dest="cname")
     parser.add_argument("--commit", dest="commit")
-    parser.add_argument("--feature-dir", default="features")
+    parser.add_argument("--feature-dir", default="features", type=Path)
     parser.add_argument("--default-arch", dest="default_arch")
     parser.add_argument("--default-version", dest="default_version")
     parser.add_argument("--version", dest="version")
@@ -67,14 +67,11 @@ def main() -> None:
     arch = args.arch
     flavor = None
     commit_id = args.commit
-    gardenlinux_root = path.dirname(args.feature_dir)
+    gardenlinux_root = args.feature_dir.parent
     version = args.version
 
     if arch is None or arch == "":
         arch = args.default_arch
-
-    if gardenlinux_root == "":
-        gardenlinux_root = "."
 
     if version is None or version == "":
         try:
@@ -108,7 +105,7 @@ def main() -> None:
     ):
         raise RuntimeError("Version not specified and no default version set")
 
-    feature_dir_name = path.basename(args.feature_dir)
+    feature_dir_name = args.feature_dir.name
 
     additional_filter_func = lambda node: node not in args.ignore
 
@@ -180,7 +177,9 @@ def get_cname_base(sorted_features: list[str]) -> str:
     )
 
 
-def get_version_and_commit_id_from_files(gardenlinux_root: str) -> tuple[str, str]:
+def get_version_and_commit_id_from_files(
+    gardenlinux_root: PathLike | str,
+) -> tuple[str, str]:
     """
     Returns the version and commit ID based on files in the GardenLinux root directory.
 
@@ -190,19 +189,16 @@ def get_version_and_commit_id_from_files(gardenlinux_root: str) -> tuple[str, st
     :since:  0.7.0
     """
 
-    commit_id = None
-    version = None
+    gardenlinux_root = Path(gardenlinux_root)
 
-    if os.access(path.join(gardenlinux_root, "COMMIT"), os.R_OK):
-        with open(path.join(gardenlinux_root, "COMMIT")) as fp:
-            commit_id = fp.read().strip()[:8]
+    version_file = gardenlinux_root / "VERSION"
+    commit_file = gardenlinux_root / "COMMIT"
 
-    if os.access(path.join(gardenlinux_root, "VERSION"), os.R_OK):
-        with open(path.join(gardenlinux_root, "VERSION")) as fp:
-            version = fp.read().strip()
-
-    if commit_id is None or version is None:
-        raise RuntimeError("Failed to read version or commit ID from files")
+    try:
+        version = version_file.read_text().strip()
+        commit_id = commit_file.read_text().strip()[:8]
+    except Exception as e:
+        raise RuntimeError("Failed to read version or commit ID from files") from e
 
     return (version, commit_id)
 
