@@ -14,6 +14,7 @@ select = [
 	"FURB", # refurb: refurbish and modernize code
 	"SIM", # flake8-simplify: simplify code
 	"PT", # flake8-pytest-style: common pytest style issues
+	"RUF010", # prefer conversion flags over type conversions
 ]
 ignore = [
 	"E501", # ignore line-length violations
