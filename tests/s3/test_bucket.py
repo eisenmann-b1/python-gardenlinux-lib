@@ -7,12 +7,9 @@ mock AWS interactions provided by the `moto` module.
 A mock AWS environment is provided by the `s3_setup` fixture found in `conftest.py`.
 """
 
-from pathlib import Path
 import io
-import pytest
 
 from gardenlinux.s3.bucket import Bucket
-
 
 REGION = "us-east-1"
 

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from dataclasses import dataclass
-from moto import mock_aws
 from hashlib import md5, sha256
+
 import boto3
 import pytest
-
-from gardenlinux.features.cname import CName as RealCName
+from moto import mock_aws
 
 BUCKET_NAME = "test-bucket"
 REGION = "us-east-1"

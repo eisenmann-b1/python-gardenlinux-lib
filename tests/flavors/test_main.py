@@ -1,9 +1,7 @@
 import json
 import sys
-import pytest
 
 from gardenlinux.flavors import __main__ as fm
-from gardenlinux.git import Git
 
 
 def test_generate_markdown_table():

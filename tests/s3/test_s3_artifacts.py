@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import yaml
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
 import pytest
+import yaml
 
 from gardenlinux.s3.s3_artifacts import S3Artifacts
 
@@ -26,9 +27,10 @@ def test_s3artifacts_init_success(s3_setup):
     assert s3_artifacts.bucket.name == env.bucket_name
 
 
-def tets_s3artifacts_invalid_bucket():
+@pytest.mark.xfail
+def test_s3artifacts_invalid_bucket():
     # Act / Assert
-    with pytest.raises(Exception):
+    with pytest.raises(Exception):  # noqa
         S3Artifacts("unknown-bucket")
 
 

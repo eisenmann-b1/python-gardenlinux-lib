@@ -8,15 +8,12 @@ gl-features-parse main entrypoint
 import argparse
 import logging
 import os
-import re
-import sys
 from functools import reduce
 from os import path
 from typing import Any, List, Set
 
 from .cname import CName
 from .parser import Parser
-
 
 _ARGS_TYPE_ALLOWED = [
     "cname",
@@ -101,9 +98,7 @@ def main() -> None:
         commit_id = cname.commit_id
         version = cname.version
 
-        input_features = Parser.get_cname_as_feature_set(flavor)
-    else:
-        input_features = args.features
+        Parser.get_cname_as_feature_set(flavor)
 
     if arch is None or arch == "" and (args.type in ("cname", "arch")):
         raise RuntimeError(

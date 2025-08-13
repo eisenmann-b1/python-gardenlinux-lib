@@ -4,21 +4,18 @@
 Features parser based on networkx.Digraph
 """
 
+import logging
+import os
 from glob import glob
 from typing import Callable, Optional
-import logging
+
 import networkx
-import os
-import re
-import subprocess
 import yaml
 
 from ..constants import (
-    ARCHS,
     BARE_FLAVOR_FEATURE_CONTENT,
     BARE_FLAVOR_LIBC_FEATURE_CONTENT,
 )
-
 from ..logger import LoggerSetup
 
 
@@ -104,11 +101,10 @@ class Parser(object):
                         continue
 
                     for ref in node_features[attr]:
-                        if not os.path.isfile(
-                            "{0}/{1}/info.yaml".format(self._feature_base_dir, ref)
-                        ):
+                        feature_yaml_file = "{0}/{1}/info.yaml".format(self._feature_base_dir, ref)
+                        if not os.path.isfile(feature_yaml_file):
                             raise ValueError(
-                                f"feature {node} references feature {ref}, but {feature_dir}/{ref}/info.yaml does not exist"
+                                f"feature {node} references feature {ref}, but {feature_yaml_file} does not exist"
                             )
 
                         feature_graph.add_edge(node, ref, attr=attr)

@@ -1,6 +1,4 @@
-import builtins
 import pytest
-from pathlib import Path
 
 import gardenlinux.oci.layer as gl_layer
 
@@ -111,7 +109,7 @@ def test_gen_metadata_from_file(tmp_path):
     # Arrange
     blob = tmp_path / "blob.tar"
     blob.write_text("data")
-    l = gl_layer.Layer(blob)
+    gl_layer.Layer(blob)
 
     # Act
     arch = "amd64"
