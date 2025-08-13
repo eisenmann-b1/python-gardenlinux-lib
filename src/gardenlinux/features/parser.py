@@ -5,7 +5,8 @@ Features parser based on networkx.Digraph
 import logging
 import os
 from collections.abc import Callable
-from glob import glob
+from os import PathLike
+from pathlib import Path
 
 import networkx
 import yaml
@@ -37,7 +38,7 @@ class Parser:
 
     def __init__(
         self,
-        gardenlinux_root: str | None = None,
+        gardenlinux_root: PathLike | str | None = None,
         feature_dir_name: str | None = "features",
         logger: logging.Logger | None = None,
     ):
@@ -54,7 +55,8 @@ class Parser:
         if gardenlinux_root is None:
             gardenlinux_root = Parser._GARDENLINUX_ROOT
 
-        feature_base_dir = os.path.join(gardenlinux_root, feature_dir_name)
+        gardenlinux_root = Path(gardenlinux_root)
+        feature_base_dir = gardenlinux_root / feature_dir_name
 
         if not os.access(feature_base_dir, os.R_OK):
             raise ValueError(f"Feature directory given is invalid: {feature_base_dir}")
@@ -81,7 +83,7 @@ class Parser:
         """
 
         if self._graph is None:
-            feature_yaml_files = glob(f"{self._feature_base_dir}/*/info.yaml")
+            feature_yaml_files = self._feature_base_dir.glob("*/info.yaml")
             features = [self._read_feature_yaml(i) for i in feature_yaml_files]
 
             feature_graph = networkx.DiGraph()
@@ -97,8 +99,8 @@ class Parser:
                         continue
 
                     for ref in node_features[attr]:
-                        feature_yaml_file = f"{self._feature_base_dir}/{ref}/info.yaml"
-                        if not os.path.isfile(feature_yaml_file):
+                        feature_yaml_file = self._feature_base_dir / ref / "info.yaml"
+                        if not feature_yaml_file.is_file():
                             raise ValueError(
                                 f"feature {node} references feature {ref}, but {feature_yaml_file} does not exist"
                             )
@@ -275,7 +277,7 @@ class Parser:
 
         return node.get("content", {}).get("features", {})
 
-    def _read_feature_yaml(self, feature_yaml_file: str):
+    def _read_feature_yaml(self, feature_yaml_file: PathLike | str) -> dict:
         """
         Reads and returns the content of the given features file.
 
@@ -285,9 +287,10 @@ class Parser:
         :since:  0.7.0
         """
 
-        name = os.path.basename(os.path.dirname(feature_yaml_file))
+        feature_yaml_file = Path(feature_yaml_file)
+        name = feature_yaml_file.parent.name
 
-        with open(feature_yaml_file) as f:
+        with feature_yaml_file.open() as f:
             content = yaml.safe_load(f)
 
         return {"name": name, "content": content}
