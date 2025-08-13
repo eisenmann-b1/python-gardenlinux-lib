@@ -38,14 +38,16 @@ import gardenlinux.s3.__main__ as s3m
     ],
 )
 def test_main_calls_correct_artifacts(argv, expected_method):
-    with patch.object(sys, "argv", argv):
-        with patch.object(s3m, "S3Artifacts") as mock_s3_cls:
-            mock_instance = MagicMock()
-            mock_s3_cls.return_value = mock_instance
+    with (
+        patch.object(sys, "argv", argv),
+        patch.object(s3m, "S3Artifacts") as mock_s3_cls,
+    ):
+        mock_instance = MagicMock()
+        mock_s3_cls.return_value = mock_instance
 
-            s3m.main()
+        s3m.main()
 
-            method = getattr(mock_instance, expected_method)
-            method.assert_called_once_with("test-cname", "some/path")
+        method = getattr(mock_instance, expected_method)
+        method.assert_called_once_with("test-cname", "some/path")
 
-            mock_s3_cls.assert_called_once_with("test-bucket")
+        mock_s3_cls.assert_called_once_with("test-bucket")

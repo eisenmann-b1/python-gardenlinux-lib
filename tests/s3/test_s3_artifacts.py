@@ -85,9 +85,11 @@ def test_download_to_directory_no_metadata_raises(s3_setup):
     artifacts = S3Artifacts(env.bucket_name)
 
     # Act / Assert
-    with TemporaryDirectory() as tmpdir:
-        with pytest.raises(IndexError):
-            artifacts.download_to_directory(env.cname, tmpdir)
+    with (
+        TemporaryDirectory() as tmpdir,
+        pytest.raises(IndexError),
+    ):
+        artifacts.download_to_directory(env.cname, tmpdir)
 
 
 def test_upload_from_directory_success(s3_setup):

@@ -101,7 +101,8 @@ def push_manifest(
     )
 
     if cosign_file:
-        print(manifest.digest, file=open(cosign_file, "w"))
+        with open(cosign_file, "w") as f:
+            print(manifest.digest, file=f)
 
 
 @cli.command()

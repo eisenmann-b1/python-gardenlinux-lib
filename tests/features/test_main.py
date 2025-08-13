@@ -151,7 +151,7 @@ def test_main_prints_commit_id(monkeypatch, capsys):
     fema.main()
 
     captured = capsys.readouterr()
-    assert "abcdef12" == captured.out.strip()
+    assert captured.out.strip() == "abcdef12"
 
 
 def test_main_prints_flags_elements_platforms(monkeypatch, capsys):
@@ -208,7 +208,7 @@ def test_main_prints_version(monkeypatch, capsys):
     fema.main()
 
     captured = capsys.readouterr()
-    assert "1.2.3" == captured.out.strip()
+    assert captured.out.strip() == "1.2.3"
 
 
 def test_main_prints_version_and_commit_id(monkeypatch, capsys):
@@ -229,7 +229,7 @@ def test_main_prints_version_and_commit_id(monkeypatch, capsys):
     fema.main()
 
     captured = capsys.readouterr()
-    assert "1.2.3-abcdef12" == captured.out.strip()
+    assert captured.out.strip() == "1.2.3-abcdef12"
 
 
 def test_main_arch_raises_missing_verison(monkeypatch, capsys):
