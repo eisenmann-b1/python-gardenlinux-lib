@@ -6,7 +6,7 @@ from ..constants import GL_ROOT_DIR
 
 
 @pytest.mark.parametrize(
-    "input_cname, expected_output",
+    ("input_cname", "expected_output"),
     [
         (
             "aws-gardener_prod",

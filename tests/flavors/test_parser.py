@@ -144,7 +144,8 @@ def test_group_by_arch_and_remove_arch():
     # Assert
     assert grouped["amd64"] == ["foo-amd64", "linux-amd64"]
     assert grouped["arm64"] == ["android-arm64"]
-    assert "linux" in removed and "android" in removed
+    assert "linux" in removed
+    assert "android" in removed
 
 
 def test_exclude_include_only():

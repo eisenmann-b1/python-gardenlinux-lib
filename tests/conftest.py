@@ -127,7 +127,7 @@ def create_test_data():
                         f.write(f"dummy content for {file_path}")
 
 
-@pytest.fixture(autouse=False, scope="function")
+@pytest.fixture(autouse=False)
 def zot_session():
     load_dotenv()
     print("start zot session")

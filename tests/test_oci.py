@@ -247,7 +247,7 @@ def verify_additional_tags(
 
 @pytest.mark.usefixtures("zot_session")
 @pytest.mark.parametrize(
-    "version, cname, arch, additional_tags_index, additional_tags_manifest",
+    ("version", "cname", "arch", "additional_tags_index", "additional_tags_manifest"),
     [
         (
             TEST_VERSION,
