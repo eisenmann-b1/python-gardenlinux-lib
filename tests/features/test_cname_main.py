@@ -1,6 +1,7 @@
+import logging
 import sys
 import types
-import logging
+
 import pytest
 
 import gardenlinux.features.cname_main as cname_main
@@ -23,7 +24,7 @@ def test_main_happy(monkeypatch, capsys):
     monkeypatch.setattr(cname_main, "CName", FakeCName)
 
     class FakeGraph:
-        in_degree = lambda self: [("f1", 0)]
+        in_degree = lambda self: [("f1", 0)]  # noqa: E731
         edges = [("f1", "f2")]
 
     class FakeParser:

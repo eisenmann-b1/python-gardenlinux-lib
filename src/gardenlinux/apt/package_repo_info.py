@@ -4,8 +4,9 @@
 APT repositories
 """
 
-from apt_repo import APTRepository
 from typing import Optional
+
+from apt_repo import APTRepository
 
 
 class GardenLinuxRepo(APTRepository):
@@ -25,7 +26,7 @@ class GardenLinuxRepo(APTRepository):
         self,
         dist: str,
         url: Optional[str] = "http://packages.gardenlinux.io/gardenlinux",
-        components: Optional[list[str]] = ["main"],
+        components: Optional[list[str]] = None,
     ):
         """
         Constructor __init__(GardenLinuxRepo)
@@ -37,6 +38,8 @@ class GardenLinuxRepo(APTRepository):
         :since: 0.7.0
         """
 
+        if components is None:
+            components = ["main"]
         self.components = components
         self.url = url
         self.dist = dist

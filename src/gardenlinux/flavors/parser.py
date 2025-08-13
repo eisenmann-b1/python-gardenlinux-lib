@@ -4,9 +4,10 @@
 Flavors parser
 """
 
-from jsonschema import validate as jsonschema_validate
 import fnmatch
+
 import yaml
+from jsonschema import validate as jsonschema_validate
 
 from ..constants import GL_FLAVORS_SCHEMA
 from ..logger import LoggerSetup
@@ -50,14 +51,14 @@ class Parser(object):
 
     def filter(
         self,
-        include_only_patterns=[],
-        wildcard_excludes=[],
+        include_only_patterns=None,
+        wildcard_excludes=None,
         only_build=False,
         only_test=False,
         only_test_platform=False,
         only_publish=False,
-        filter_categories=[],
-        exclude_categories=[],
+        filter_categories=None,
+        exclude_categories=None,
     ):
         """
         Filters flavors data and generates combinations.
@@ -117,11 +118,13 @@ class Parser(object):
                 combination = combination.replace("--", "-").replace("-_", "_")
 
                 # Exclude combinations explicitly
-                if Parser.should_exclude(combination, [], wildcard_excludes):
+                if Parser.should_exclude(combination, [], wildcard_excludes or []):
                     continue
 
                 # Apply include-only filters
-                if not Parser.should_include_only(combination, include_only_patterns):
+                if not Parser.should_include_only(
+                    combination, include_only_patterns or []
+                ):
                     continue
 
                 combinations.append((arch, combination))

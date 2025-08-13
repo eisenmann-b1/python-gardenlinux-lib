@@ -2,10 +2,9 @@
 
 from os import PathLike
 from pathlib import Path
-import sys
 
-from git import Repo
 from git import Git as _Git
+from git import Repo
 
 from ..logger import LoggerSetup
 

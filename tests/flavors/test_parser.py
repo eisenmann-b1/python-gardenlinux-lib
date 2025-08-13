@@ -1,6 +1,5 @@
-import yaml
-import types
 import pytest
+import yaml
 
 from gardenlinux.flavors.parser import Parser
 
